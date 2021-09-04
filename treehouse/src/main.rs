@@ -9,8 +9,21 @@ fn what_is_your_name() -> String {
 }
 
 fn main() {
+    let mut allow_them_in = false;
+    let visitor_list = ["kinu", "mugi", "herbert"];
+
     println!("Hello, what's your name?");
     let name = what_is_your_name();
-    println!("Hello, {}", name);
+
+    for visitor in &visitor_list {
+        if visitor == &name {
+            allow_them_in = true;
+        }
+    }
+    if allow_them_in {
+        println!("Welcome to the Treehouse, {}", name);
+    } else {
+        println!("Sorry, you aren't on the list.");
+    }
     // println!("{:?}", name); // debug placeholder
 }

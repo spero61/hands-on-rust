@@ -1,5 +1,6 @@
 use std::io::stdin;
 
+#[derive(Debug)]
 struct Visitor {
     name: String,
     greeting: String,
@@ -27,20 +28,31 @@ fn what_is_your_name() -> String {
 }
 
 fn main() {
-    let visitor_list = [
+    let mut visitor_list = vec![
         Visitor::new("kinu", "Konnichiwa Kinu chan, How's it going?"),
         Visitor::new("mugi", "Otsukare Mugi kun, I like your drawing."),
         Visitor::new("herbert", "I enjoy reading this book, thanks."),
     ];
 
-    println!("Hello, what's your name?");
-    let name = what_is_your_name();
-
-    let known_visitor = visitor_list
-        .iter() // create an iterator that contains all of the data from the visitor_list
-        .find(|visitor| visitor.name == name); // find() runs a closure
-    match known_visitor {
-        Some(visitor) => visitor.greet_visitor(),
-        None => println!("You are not on the visitor list. Please leave."),
+    loop {
+        println!("Hello, what's your name? (Leave empty and press ENTER to quit)");
+        let name = what_is_your_name();
+        let known_visitor = visitor_list
+            .iter() // create an iterator that contains all of the data from the visitor_list
+            .find(|visitor| visitor.name == name); // find() runs a closure
+        match known_visitor {
+            Some(visitor) => visitor.greet_visitor(),
+            None => {
+                if name.is_empty() {
+                    break;
+                } else {
+                    println!("{} is not on the visitor list.", name);
+                    visitor_list.push(Visitor::new(&name, "New friend"));
+                }
+            }
+        }
     }
+
+    println!("The final list of visitors:");
+    println!("{:#?}", visitor_list);
 }

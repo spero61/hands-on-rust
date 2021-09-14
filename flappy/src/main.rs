@@ -1,6 +1,6 @@
 use bracket_lib::prelude::*;
 
-const SCREEN_WIDTH: i32 = 80;
+// const SCREEN_WIDTH: i32 = 80; // not used yet
 const SCREEN_HEIGHT: i32 = 50;
 const FRAME_DURATION: f32 = 75.0;
 
@@ -81,7 +81,7 @@ impl State {
         }
     }
 
-    fn play(&mut self, _ctx: &mut BTerm) {
+    fn play(&mut self, ctx: &mut BTerm) {
         ctx.cls_bg(NAVY);
         self.frame_time += ctx.frame_time_ms;
         if self.frame_time > FRAME_DURATION {
@@ -96,8 +96,6 @@ impl State {
         if self.player.y > SCREEN_HEIGHT {
             self.mode = GameMode::End;
         }
-
-        self.mode = GameMode::End;
     }
 
     fn dead(&mut self, ctx: &mut BTerm) {

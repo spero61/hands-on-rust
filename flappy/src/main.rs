@@ -29,8 +29,8 @@ impl Player {
         ctx.set(
             0,
             self.y,
-            YELLOW,
-            BLACK,
+            RGB::from_hex("#F3FFB0").expect("Invalid hex string for Player"),
+            BLACK,         // background color for a Player
             to_cp437('@'), // converts a Unicode symbol to the maching Codepage 437 char
         );
     }
@@ -70,15 +70,17 @@ impl Obstacle {
     fn render(&mut self, ctx: &mut BTerm, player_x: i32) {
         let screen_x = self.x - player_x;
         let half_size = self.size / 2;
+        let fg_color = RGB::from_hex("#FF003C").expect("Invalid hex string for Obstacle fg");
+        let bg_color = RGB::from_hex("#610017").expect("Invalid hex string for Obstacle bg");
 
         // Draw the top half of the obstacle
         for y in 0..self.gap_y - half_size {
-            ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
+            ctx.set(screen_x, y, fg_color, bg_color, to_cp437('|'));
         }
 
         // Draw the bottom half of the obstacle
         for y in self.gap_y + half_size..SCREEN_HEIGHT {
-            ctx.set(screen_x, y, RED, BLACK, to_cp437('|'));
+            ctx.set(screen_x, y, fg_color, bg_color, to_cp437('|'));
         }
     }
 
@@ -126,7 +128,9 @@ impl State {
     }
 
     fn play(&mut self, ctx: &mut BTerm) {
-        ctx.cls_bg(NAVY);
+        let state_bg_color =
+            RGB::from_hex("#070330").expect("Invalid hex string for state_bg_color");
+        ctx.cls_bg(state_bg_color);
         self.frame_time += ctx.frame_time_ms;
         if self.frame_time > FRAME_DURATION {
             self.frame_time = 0.0;
@@ -136,7 +140,7 @@ impl State {
             self.player.flap();
         }
         self.player.render(ctx);
-        ctx.print(0, 0, "Press SPACE to flap.");
+        ctx.print(0, 0, "Press SPACE to flap!");
         ctx.print(0, 1, &format!("Score: {}", self.score));
 
         self.obstacle.render(ctx, self.player.x);
